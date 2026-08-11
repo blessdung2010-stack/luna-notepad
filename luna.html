@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Luna Notepad</title>
+
+<style>
+
+/* =========================
+   LUNA CSS
+========================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #080b18;
+    --panel: #10162b;
+    --panel2: #151d38;
+    --text: #eef2ff;
+    --muted: #9ba8ca;
+    --accent: #7c5cff;
+    --accent2: #00d4ff;
+    --danger: #ff5277;
+    --border: rgba(255,255,255,.1);
+}
+
+body {
+    font-family: Inter, Segoe UI, Arial, sans-serif;
+    background:
+        radial-gradient(
+            circle at 20% 10%,
+            #20285b 0,
+            #080b18 40%,
+            #050711 100%
+        );
+
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: 0;
+}
+
+/* =========================
+   SPLASH SCREEN
+========================= */
+
+.splash {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+
+    background: #060817;
+
+    display: grid;
+    place-items: center;
+
+    transition:
+        opacity .7s,
+        visibility .7s;
+}
+
+.splash.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-box {
+    text-align: center;
+    animation: rise .9s ease;
+}
+
+.logo {
+    width: 90px;
+    height: 90px;
+
+    margin: auto;
+
+    border-radius: 28px;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 42px;
+    font-weight: 900;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent2)
+        );
+
+    box-shadow:
+        0 0 55px #6354ff77;
+}
+
+.splash h1 {
+    font-size: 48px;
+    margin: 22px 0 8px;
+}
+
+.splash p {
+    color: var(--muted);
+    font-size: 18px;
+}
+
+.power {
+    margin-top: 35px;
+
+    color: #aab5d6;
+
+    font-size: 13px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+/* =========================
+   APPLICATION
+========================= */
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    width: 250px;
+
+    background: rgba(8,11,24,.8);
+
+    backdrop-filter: blur(18px);
+
+    border-right: 1px solid var(--border);
+
+    padding: 24px 16px;
+
+    position: fixed;
+
+    inset: 0 auto 0 0;
+
+    z-index: 5;
+}
+
+.brand {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 8px 10px 25px;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 13px;
+
+    display: grid;
+    place-items: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent2)
+        );
+
+    font-weight: 900;
+}
+
+.brand strong {
+    font-size: 22px;
+}
+
+.nav-title {
+    font-size: 11px;
+
+    color: #66739a;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1.5px;
+
+    margin: 15px 10px 8px;
+}
+
+.nav button {
+    width: 100%;
+
+    text-align: left;
+
+    color: #bfc8e5;
+
+    background: transparent;
+
+    padding: 13px 12px;
+
+    border-radius: 12px;
+
+    margin: 3px 0;
+
+    transition: .2s;
+}
+
+.nav button:hover,
+.nav button.active {
+    background: #ffffff0e;
+
+    color: white;
+
+    transform: translateX(3px);
+}
+
+.nav button.active {
+    box-shadow:
+        inset 3px 0 var(--accent);
+}
+
+.user-card {
+    position: absolute;
+
+    bottom: 20px;
+
+    left: 16px;
+    right: 16px;
+
+    padding: 12px;
+
+    border: 1px solid var(--border);
+
+    background: #ffffff06;
+
+    border-radius: 14px;
+
+    color: #aeb9d8;
+
+    font-size: 12px;
+}
+
+/* =========================
+   MAIN AREA
+========================= */
+
+.main {
+    margin-left: 250px;
+
+    width: calc(100% - 250px);
+
+    padding: 25px 30px 40px;
+}
+
+.top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 22px;
+}
+
+.greeting h2 {
+    font-size: 28px;
+}
+
+.greeting p {
+    color: var(--muted);
+
+    margin-top: 4px;
+}
+
+.user-pill {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px 13px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 30px;
+
+    background: #ffffff08;
+}
+
+.avatar {
+    width: 31px;
+    height: 31px;
+
+    border-radius: 50%;
+
+    display: grid;
+    place-items: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            var(--accent2)
+        );
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    border: 1px solid var(--border);
+
+    background:
+        linear-gradient(
+            120deg,
+            #171e3b,
+            #10162b
+        );
+
+    border-radius: 22px;
+
+    padding: 25px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    align-items: center;
+
+    box-shadow: 0 20px 70px #0004;
+}
+
+.hero h1 {
+    font-size: 32px;
+}
+
+.hero p {
+    color: var(--muted);
+
+    margin-top: 7px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.primary {
+    padding: 13px 18px;
+
+    border-radius: 12px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #4e9cff
+        );
+
+    box-shadow: 0 8px 25px #6655ff33;
+
+    transition: .25s;
+}
+
+.primary:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.12);
+}
+
+/* =========================
+   STATISTICS
+========================= */
+
+.cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 16px;
+
+    margin: 22px 0;
+}
+
+.card {
+    padding: 20px;
+
+    border: 1px solid var(--border);
+
+    background: #ffffff06;
+
+    border-radius: 18px;
+}
+
+.card small {
+    color: #7f8caf;
+}
+
+.card strong {
+    display: block;
+
+    font-size: 28px;
+
+    margin-top: 7px;
+}
+
+/* =========================
+   NOTE EDITOR
+========================= */
+
+.editor {
+    border: 1px solid var(--border);
+
+    background: #0d1327;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    box-shadow: 0 20px 60px #0004;
+}
+
+.toolbar {
+    padding: 13px 15px;
+
+    display: flex;
+
+    gap: 9px;
+
+    align-items: center;
+
+    border-bottom: 1px solid var(--border);
+
+    background: #ffffff05;
+}
+
+.title {
+    flex: 1;
+
+    background: transparent;
+
+    border: 1px solid transparent;
+
+    color: white;
+
+    padding: 9px 11px;
+
+    border-radius: 9px;
+
+    outline: 0;
+
+    font-weight: 700;
+}
+
+.title:focus {
+    border-color: #ffffff20;
+
+    background: #ffffff08;
+}
+
+.tool {
+    background: #ffffff09;
+
+    color: #dce3ff;
+
+    padding: 9px 12px;
+
+    border-radius: 9px;
+}
+
+.tool:hover {
+    background: #ffffff15;
+}
+
+/* =========================
+   SAVE BUTTON
+========================= */
+
+.save {
+    background:
+        linear-gradient(
+            135deg,
+            #7c5cff,
+            #00bfff
+        );
+
+    color: white;
+
+    font-weight: 800;
+
+    transition: .3s;
+}
+
+/*
+   The save button changes
+   colour when the mouse
+   hovers over it.
+*/
+
+.save:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #ff4f9a,
+            #ffb000
+        );
+
+    transform: scale(1.05);
+
+    box-shadow:
+        0 0 25px #ff5a9a66;
+}
+
+/* =========================
+   TEXT AREA
+========================= */
+
+textarea {
+    display: block;
+
+    width: 100%;
+
+    height: 430px;
+
+    resize: vertical;
+
+    background: #0a0f20;
+
+    color: #e9edff;
+
+    border: 0;
+
+    outline: 0;
+
+    padding: 25px;
+
+    font-size: 17px;
+
+    line-height: 1.75;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+    padding: 10px 16px;
+
+    color: #7e8bb0;
+
+    font-size: 12px;
+
+    border-top: 1px solid var(--border);
+
+    display: flex;
+
+    justify-content: space-between;
+}
+
+/* =========================
+   MODALS
+========================= */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    background: #0009;
+
+    backdrop-filter: blur(8px);
+
+    z-index: 50;
+
+    display: none;
+
+    place-items: center;
+
+    padding: 20px;
+}
+
+.modal.show {
+    display: grid;
+}
+
+.modal-box {
+    width: min(470px,100%);
+
+    background: #11182e;
+
+    border: 1px solid var(--border);
+
+    border-radius: 20px;
+
+    padding: 24px;
+
+    box-shadow: 0 30px 100px #0008;
+}
+
+.modal-box h3 {
+    font-size: 23px;
+}
+
+.modal-box p {
+    color: var(--muted);
+
+    margin: 8px 0 18px;
+
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 12px;
+}
+
+.choice {
+    padding: 17px;
+
+    border-radius: 14px;
+
+    background: #ffffff08;
+
+    border: 1px solid var(--border);
+
+    color: white;
+
+    text-align: left;
+}
+
+.choice:hover {
+    background: #ffffff12;
+
+    border-color: #7565ff;
+}
+
+.choice b {
+    display: block;
+
+    margin-bottom: 5px;
+}
+
+.choice span {
+    font-size: 12px;
+
+    color: #8e9abb;
+}
+
+/* =========================
+   PASSWORD FORM
+========================= */
+
+.form input {
+    width: 100%;
+
+    padding: 13px;
+
+    background: #090e1d;
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    color: white;
+
+    outline: 0;
+
+    margin: 7px 0 12px;
+}
+
+.check {
+    display: flex;
+
+    gap: 9px;
+
+    align-items: center;
+
+    color: #c4cce3;
+
+    font-size: 13px;
+
+    margin: 4px 0 15px;
+}
+
+.check input {
+    width: auto;
+
+    margin: 0;
+}
+
+/* =========================
+   TOAST MESSAGE
+========================= */
+
+.toast {
+    position: fixed;
+
+    right: 25px;
+
+    bottom: 25px;
+
+    z-index: 80;
+
+    background: #161f3a;
+
+    border: 1px solid var(--border);
+
+    padding: 13px 17px;
+
+    border-radius: 12px;
+
+    transform: translateY(100px);
+
+    opacity: 0;
+
+    transition: .3s;
+
+    box-shadow: 0 15px 40px #0007;
+}
+
+.toast.show {
+    transform: none;
+
+    opacity: 1;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes rise {
+
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:800px) {
+
+    .sidebar {
+        width: 72px;
+
+        padding: 18px 8px;
+    }
+
+    .brand strong,
+    .nav-title,
+    .nav button span,
+    .user-card {
+        display: none;
+    }
+
+    .brand {
+        justify-content: center;
+    }
+
+    .nav button {
+        text-align: center;
+    }
+
+    .main {
+        margin-left: 72px;
+
+        width: calc(100% - 72px);
+
+        padding: 18px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        display: block;
+    }
+
+    .hero .primary {
+        margin-top: 15px;
+    }
+
+    .toolbar {
+        flex-wrap: wrap;
+    }
+
+    .title {
+        flex-basis: 100%;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     WELCOME SCREEN
+========================= -->
+
+<div class="splash" id="splash">
+
+    <div class="splash-box">
+
+        <div class="logo">
+            L
+        </div>
+
+        <h1>
+            Welcome to Luna
+        </h1>
+
+        <p>
+            Your beautiful space for notes and ideas.
+        </p>
+
+        <div class="power">
+            Powered by Inter Trick
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     APPLICATION
+========================= -->
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                L
+            </div>
+
+            <strong>
+                Luna
+            </strong>
+
+        </div>
+
+
+        <div class="nav-title">
+            Workspace
+        </div>
+
+
+        <div class="nav">
+
+            <button
+                class="active"
+                onclick="location.href='index.html'">
+
+                ??
+                <span>
+                    New Note
+                </span>
+
+            </button>
+
+
+            <button
+                onclick="location.href='save.html'">
+
+                ??
+                <span>
+                    My Saved Files
+                </span>
+
+            </button>
+
+
+            <button
+                onclick="location.href='recycle.html'">
+
+                ??
+                <span>
+                    Recycle Bin
+                </span>
+
+            </button>
+
+
+            <button
+                onclick="changeUser()">
+
+                ??
+                <span>
+                    Change Username
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <div class="nav-title">
+            More
+        </div>
+
+
+        <div class="nav">
+
+            <button onclick="aboutLuna()">
+
+                ?
+                <span>
+                    About Luna
+                </span>
+
+            </button>
+
+
+            <button
+                onclick="toggleSound()"
+                id="soundBtn">
+
+                ??
+                <span>
+                    Sound: On
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <div class="user-card">
+
+            Signed in as
+
+            <b id="sideUser">
+                Guest
+            </b>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+        <!-- TOP -->
+
+        <div class="top">
+
+            <div class="greeting">
+
+                <h2 id="greeting">
+                    Good morning
+                </h2>
+
+                <p>
+                    Ready to capture your next idea?
+                </p>
+
+            </div>
+
+
+            <div class="user-pill">
+
+                <div
+                    class="avatar"
+                    id="avatar">
+
+                    G
+
+                </div>
+
+                <b id="topUser">
+                    Guest
+                </b>
+
+            </div>
+
+        </div>
+
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div>
+
+                <h1>
+                    Welcome to Luna ??
+                </h1>
+
+                <p>
+                    A simple, private and elegant
+                    notebook for your everyday thoughts.
+                </p>
+
+            </div>
+
+
+            <button
+                class="primary"
+                onclick="newNote()">
+
+                + New Note
+
+            </button>
+
+        </section>
+
+
+        <!-- STATISTICS -->
+
+        <div class="cards">
+
+            <div class="card">
+
+                <small>
+                    Saved in Luna
+                </small>
+
+                <strong id="fileCount">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="card">
+
+                <small>
+                    In Recycle Bin
+                </small>
+
+                <strong id="trashCount">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="card">
+
+                <small>
+                    Words in note
+                </small>
+
+                <strong id="wordCount">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- NOTE EDITOR -->
+
+        <section class="editor">
+
+            <div class="toolbar">
+
+                <input
+                    class="title"
+                    id="title"
+                    placeholder="Note title (required for Luna Storage)"
+                >
+
+
+                <button
+                    class="tool"
+                    onclick="clearNote()">
+
+                    Clear
+
+                </button>
+
+
+                <button
+                    class="tool save"
+                    onclick="saveNote()">
+
+                    ?? Save
+
+                </button>
+
+            </div>
+
+
+            <textarea
+                id="content"
+                placeholder="Start typing your note here..."
+            ></textarea>
+
+
+            <div class="status">
+
+                <span id="status">
+                    Start typing to create your note.
+                </span>
+
+                <span id="counter">
+                    0 words · 0 characters
+                </span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================
+     SAVE CHOICE MODAL
+========================= -->
+
+<div
+    class="modal"
+    id="saveModal">
+
+    <div class="modal-box">
+
+        <h3>
+            Where should Luna save it?
+        </h3>
+
+        <p>
+            Choose a storage method for your note.
+        </p>
+
+
+        <div class="modal-actions">
+
+
+            <button
+                class="choice"
+                onclick="deviceSave()">
+
+                <b>
+                    ?? Device Storage
+                </b>
+
+                <span>
+                    Save a real file to your computer.
+                </span>
+
+            </button>
+
+
+            <button
+                class="choice"
+                onclick="lunaSaveStart()">
+
+                <b>
+                    ?? Luna Storage
+                </b>
+
+                <span>
+                    Keep it inside this browser.
+                </span>
+
+            </button>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     PASSWORD MODAL
+========================= -->
+
+<div
+    class="modal"
+    id="passwordModal">
+
+    <div class="modal-box">
+
+        <h3>
+            Protect your Luna file?
+        </h3>
+
+        <p>
+            You can add a password.
+            The note will be stored in your browser.
+        </p>
+
+
+        <div class="form">
+
+            <input
+                id="lunaTitle"
+                placeholder="File title"
+            >
+
+
+            <input
+                id="lunaPassword"
+                type="password"
+                placeholder="Password (optional)"
+            >
+
+
+            <label class="check">
+
+                <input
+                    type="checkbox"
+                    id="noPassword"
+                    onchange="
+                    document.getElementById(
+                        'lunaPassword'
+                    ).disabled=this.checked
+                    "
+                >
+
+                Leave without a password
+
+            </label>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="tool"
+                onclick="closeModals()">
+
+                Cancel
+
+            </button>
+
+
+            <button
+                class="primary"
+                onclick="finishLunaSave()">
+
+                Save to Luna
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast">
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   LUNA JAVASCRIPT
+===================================================== */
+
+
+/* Sound */
+
+let soundOn = true;
+
+let audioCtx;
+
+
+/* Shortcut for document.getElementById */
+
+const $ = id => document.getElementById(id);
+
+
+/* =====================================================
+   SOUND EFFECT
+===================================================== */
+
+function beep(freq = 500, dur = .08) {
+
+    if (!soundOn)
+        return;
+
+    try {
+
+        audioCtx =
+            audioCtx ||
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+
+        let oscillator =
+            audioCtx.createOscillator();
+
+
+        let gain =
+            audioCtx.createGain();
+
+
+        oscillator.frequency.value =
+            freq;
+
+
+        oscillator.type =
+            'sine';
+
+
+        gain.gain.setValueAtTime(
+            .05,
+            audioCtx.currentTime
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            audioCtx.currentTime + dur
+        );
+
+
+        oscillator.connect(gain);
+
+        gain.connect(audioCtx.destination);
+
+
+        oscillator.start();
+
+        oscillator.stop(
+            audioCtx.currentTime + dur
+        );
+
+    }
+
+    catch(e) {
+
+        console.log(e);
+
+    }
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function toast(message) {
+
+    $('toast').textContent =
+        message;
+
+
+    $('toast').classList.add(
+        'show'
+    );
+
+
+    setTimeout(() => {
+
+        $('toast').classList.remove(
+            'show'
+        );
+
+    }, 2800);
+
+
+    beep(620, .07);
+
+}
+
+
+/* =====================================================
+   USERNAME
+===================================================== */
+
+function username() {
+
+    return (
+        localStorage.getItem(
+            'lunaUsername'
+        ) || 'Guest'
+    );
+
+}
+
+
+function renderUser() {
+
+    let user =
+        username();
+
+
+    $('topUser').textContent =
+        user;
+
+
+    $('sideUser').textContent =
+        user;
+
+
+    $('avatar').textContent =
+        user.charAt(0).toUpperCase();
+
+}
+
+
+function changeUser() {
+
+    let user =
+        prompt(
+            'Enter your Luna username:',
+            username()
+        );
+
+
+    if (
+        user &&
+        user.trim()
+    ) {
+
+        localStorage.setItem(
+            'lunaUsername',
+            user.trim()
+        );
+
+
+        renderUser();
+
+
+        toast(
+            'Username updated'
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   GREETING
+===================================================== */
+
+function greeting() {
+
+    let hour =
+        new Date().getHours();
+
+
+    if (hour < 12) {
+
+        $('greeting').textContent =
+            'Good morning';
+
+    }
+
+    else if (hour < 18) {
+
+        $('greeting').textContent =
+            'Good afternoon';
+
+    }
+
+    else {
+
+        $('greeting').textContent =
+            'Good evening';
+
+    }
+
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+function stats() {
+
+    let files =
+        JSON.parse(
+            localStorage.getItem(
+                'lunaFiles'
+            ) || '[]'
+        );
+
+
+    let trash =
+        JSON.parse(
+            localStorage.getItem(
+                'lunaTrash'
+            ) || '[]'
+        );
+
+
+    $('fileCount').textContent =
+        files.length;
+
+
+    $('trashCount').textContent =
+        trash.length;
+
+}
+
+
+/* =====================================================
+   WORD COUNTER
+===================================================== */
+
+function updateCount() {
+
+    let content =
+        $('content').value.trim();
+
+
+    let words =
+        content
+        ? content.split(/\s+/).length
+        : 0;
+
+
+    $('wordCount').textContent =
+        words;
+
+
+    $('counter').textContent =
+        words +
+        ' words · ' +
+        $('content').value.length +
+        ' characters';
+
+
+    $('status').textContent =
+        content
+        ? 'Note is ready to save.'
+        : 'Start typing to create your note.';
+
+}
+
+
+$('content').addEventListener(
+    'input',
+    updateCount
+);
+
+
+/* =====================================================
+   NEW NOTE
+===================================================== */
+
+function newNote() {
+
+    $('title').value = '';
+
+    $('content').value = '';
+
+    updateCount();
+
+    $('title').focus();
+
+    beep(700, .06);
+
+}
+
+
+/* =====================================================
+   CLEAR NOTE
+===================================================== */
+
+function clearNote() {
+
+    if (
+        confirm(
+            'Clear this note?'
+        )
+    ) {
+
+        newNote();
+
+    }
+
+}
+
+
+/* =====================================================
+   SAVE NOTE
+===================================================== */
+
+function saveNote() {
+
+    if (
+        !$('content').value.trim()
+    ) {
+
+        toast(
+            'Please type something before saving.'
+        );
+
+        return;
+
+    }
+
+
+    $('saveModal').classList.add(
+        'show'
+    );
+
+
+    beep(740, .08);
+
+}
+
+
+/* =====================================================
+   CLOSE MODALS
+===================================================== */
+
+function closeModals() {
+
+    document
+        .querySelectorAll('.modal')
+        .forEach(
+            modal =>
+                modal.classList.remove(
+                    'show'
+                )
+        );
+
+}
+
+
+/* =====================================================
+   SAVE TO DEVICE
+===================================================== */
+
+function deviceSave() {
+
+    closeModals();
+
+
+    let title =
+        (
+            $('title').value.trim()
+            ||
+            'Luna Note'
+        )
+        .replace(
+            /[\\/:*?"<>|]/g,
+            '_'
+        );
+
+
+    let data =
+        $('content').value;
+
+
+    let blob =
+        new Blob(
+            [data],
+            {
+                type:
+                    'text/plain;charset=utf-8'
+            }
+        );
+
+
+    /*
+       Modern browsers support
+       showSaveFilePicker().
+    */
+
+    if (
+        window.showSaveFilePicker
+    ) {
+
+        (
+            async () => {
+
+                try {
+
+                    let handle =
+                        await showSaveFilePicker({
+
+                            suggestedName:
+                                title + '.txt',
+
+                            types: [
+
+                                {
+                                    description:
+                                        'Text file',
+
+                                    accept: {
+                                        'text/plain':
+                                            ['.txt']
+                                    }
+
+                                }
+
+                            ]
+
+                        });
+
+
+                    let writable =
+                        await handle.createWritable();
+
+
+                    await writable.write(
+                        data
+                    );
+
+
+                    await writable.close();
+
+
+                    toast(
+                        'File saved to your device'
+                    );
+
+                }
+
+                catch(error) {
+
+                    if (
+                        error.name !==
+                        'AbortError'
+                    ) {
+
+                        fallbackDownload(
+                            blob,
+                            title
+                        );
+
+                    }
+
+                }
+
+            }
+        )();
+
+    }
+
+    else {
+
+        fallbackDownload(
+            blob,
+            title
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   FALLBACK DEVICE DOWNLOAD
+===================================================== */
+
+function fallbackDownload(
+    blob,
+    title
+) {
+
+    let link =
+        document.createElement(
+            'a'
+        );
+
+
+    link.href =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    link.download =
+        title + '.txt';
+
+
+    link.click();
+
+
+    setTimeout(
+        () =>
+            URL.revokeObjectURL(
+                link.href
+            ),
+        1000
+    );
+
+
+    toast(
+        'Download started — choose where to keep the file.'
+    );
+
+}
+
+
+/* =====================================================
+   START LUNA STORAGE
+===================================================== */
+
+function lunaSaveStart() {
+
+    $('saveModal')
+        .classList
+        .remove('show');
+
+
+    $('lunaTitle').value =
+        $('title').value.trim();
+
+
+    $('lunaPassword').value =
+        '';
+
+
+    $('noPassword').checked =
+        false;
+
+
+    $('lunaPassword').disabled =
+        false;
+
+
+    $('passwordModal')
+        .classList
+        .add('show');
+
+}
+
+
+/* =====================================================
+   SAVE TO LUNA STORAGE
+===================================================== */
+
+function finishLunaSave() {
+
+    let title =
+        $('lunaTitle')
+        .value
+        .trim();
+
+
+    if (!title) {
+
+        toast(
+            'Please enter a file title.'
+        );
+
+        return;
+
+    }
+
+
+    let password =
+        $('noPassword').checked
+        ? ''
+        : $('lunaPassword').value;
+
+
+    let files =
+        JSON.parse(
+            localStorage.getItem(
+                'lunaFiles'
+            ) || '[]'
+        );
+
+
+    let now =
+        new Date().toISOString();
+
+
+    files.push({
+
+        id:
+            Date.now().toString(),
+
+        title:
+            title,
+
+        content:
+            $('content').value,
+
+        password:
+            password,
+
+        created:
+            now,
+
+        updated:
+            now
+
+    });
+
+
+    localStorage.setItem(
+        'lunaFiles',
+        JSON.stringify(files)
+    );
+
+
+    closeModals();
+
+
+    stats();
+
+
+    /*
+       Countdown:
+       5 ? 4 ? 3 ? 2 ? 1
+    */
+
+    let number = 5;
+
+
+    toast(
+        'File saving in 5...'
+    );
+
+
+    let timer =
+        setInterval(() => {
+
+            number--;
+
+
+            if (number > 0) {
+
+                toast(
+                    'File saving in ' +
+                    number +
+                    '...'
+                );
+
+            }
+
+            else {
+
+                clearInterval(
+                    timer
+                );
+
+
+                toast(
+                    '? File successfully saved to Luna'
+                );
+
+
+                beep(
+                    900,
+                    .12
+                );
+
+            }
+
+        }, 900);
+
+}
+
+
+/* =====================================================
+   SOUND ON/OFF
+===================================================== */
+
+function toggleSound() {
+
+    soundOn =
+        !soundOn;
+
+
+    $('soundBtn').innerHTML =
+        soundOn
+        ? '?? <span>Sound: On</span>'
+        : '?? <span>Sound: Off</span>';
+
+
+    beep();
+
+}
+
+
+/* =====================================================
+   ABOUT
+===================================================== */
+
+function aboutLuna() {
+
+    alert(
+
+        'Luna Notepad\\n\\n' +
+
+        'A browser-based notebook ' +
+        'made for Inter Trick.\\n\\n' +
+
+        'Luna Storage uses your browser ' +
+        'localStorage. Device Storage ' +
+        'creates a .txt file.'
+
+    );
+
+}
+
+
+/* =====================================================
+   START APPLICATION
+===================================================== */
+
+window.addEventListener(
+    'load',
+    () => {
+
+        renderUser();
+
+        greeting();
+
+        stats();
+
+
+        /*
+           Keep welcome screen
+           visible for 2 seconds.
+        */
+
+        setTimeout(
+            () => {
+
+                $('splash')
+                    .classList
+                    .add('hide');
+
+            },
+            2000
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>
